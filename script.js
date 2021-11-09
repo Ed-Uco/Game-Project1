@@ -178,12 +178,16 @@ function GameOver() {
       ctx.fillText('GAME OVER, your score is ' + score, 130, 250);
       gameOver = true;
 }
-function touching() {
-      
+const background = new Image();
+background.src = 'images/background.png';
+
+function handbackground() {
+      ctx.drawImage(background,0,0,canvas.width,100);
 }
 //Animation Loop
 function animation() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      handbackground();
       handbubbles();
       player.update();
       player.draw();
