@@ -34,6 +34,8 @@ $canvas.addEventListener('mouseup', function (event) {
       mouse.click = false;
       
 })
+
+
 //Player
 class Player {
       constructor() {
@@ -49,6 +51,8 @@ class Player {
       update() {
             const dx = this.x - mouse.x;
             const dy = this.y - mouse.y;
+            let theta = Math.atan2(dy, dx);
+            this.angle = theta;
             if (mouse.x != this.x) {
                   this.x -= dx / 10;
             }
@@ -64,11 +68,30 @@ class Player {
                   ctx.lineTo(mouse.x, mouse.y);
                   ctx.stroke();
             }
-            ctx.fillStyle = 'red';
+            //ctx.fillStyle = 'red';
             ctx.beginPath();
-            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-            ctx.fill();
+            //ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+            //ctx.fill();
             ctx.closePath();
+            ctx.save();
+            ctx.translate(this.x, this.y);
+            ctx.rotate(this.angle);
+            if (this.x >= mouse.x) {
+                  ctx.drawImage(playerLeft,this.frameX * this.spriteWidth, this.frameY * this.spriteHeight, this.spriteWidth, this.spriteHeight, 0 -60, 0 -45, this.spriteWidth/4, this.spriteHeight/4)
+            } else {
+                  ctx.drawImage(
+                      playerRight,
+                      this.frameX * this.spriteWidth,
+                      this.frameY * this.spriteHeight,
+                      this.spriteWidth,
+                      this.spriteHeight,
+                      0 - 60,
+                      0 - 45,
+                      this.spriteWidth / 4,
+                      this.spriteHeight / 4,
+                  );
+            }
+            ctx.restore();
       }
 }
 
@@ -80,13 +103,7 @@ class Enemy {
             this.speed = Math.random() * 2 + 2;
             this.frame = 0;
             this.frameX = 0;
-            this.frameY = 0
-            this.img1 = new Image();
-            this.imag2 = new Image();
-            this.img3 = new Image();
-            this.img4 = new Image();
-            this.animation = 0;
-            this.vy = 0;
+            this.frameY = 0;
 
       }
       draw() {
@@ -153,6 +170,10 @@ class Bubble {
 
 
 const player = new Player();
+const playerLeft = new Image();
+playerLeft.src = '/images/fish-normal.png'
+const playerRight = new Image();
+playerRight.src = '/images/fish down.png'
 const bubbles = [];
 const enemy = new Enemy();
 const background = new Image();
