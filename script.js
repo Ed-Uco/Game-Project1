@@ -1,34 +1,44 @@
-//Canvas setup
-const canvas = document.getElementById('canvas1');
-const ctx = canvas.getContext('2d');
-canvas.width = 800;
-canvas.height = 500;
+//$canvas setup
+//const $canvas = document.getElementById('$canvas1');
+//const $canvas = document.querySelector('canvas1');
+//const ctx = $canvas.getContext('2d');
+//const ctx = $canvas.getContext('2d');
+
+
+
+const $canvas = document.querySelector('canvas');
+const ctx = $canvas.getContext('2d');
+
+/* $canvas.width = 800;
+$canvas.height = 500; */
 let score = 0;
 let gameFrame = 0;
 ctx.font = '50px Georgia';
 gameOver = false;
+
+
 //Mouse interactivity
-let canvasPosition = canvas.getBoundingClientRect();
+let $canvasPosition = $canvas.getBoundingClientRect();
 const mouse = {
-      x: canvas.width / 2,
-      y: canvas.height / 2,
+      x: $canvas.width / 2,
+      y: $canvas.height / 2,
       click: false,
 }
-canvas.addEventListener('mousedown', function (event) {
+$canvas.addEventListener('mousedown', function (event) {
       mouse.click = true;
-      mouse.x = event.x - canvasPosition.left;
-      mouse.y = event.y - canvasPosition.top;
+      mouse.x = event.x - $canvasPosition.left;
+      mouse.y = event.y - $canvasPosition.top;
 });
 
-canvas.addEventListener('mouseup', function (event) {
+$canvas.addEventListener('mouseup', function (event) {
       mouse.click = false;
       
 })
 //Player
 class Player {
       constructor() {
-            this.x = canvas.width;
-            this.y = canvas.height / 2;
+            this.x = $canvas.width;
+            this.y = $canvas.height / 2;
             this.radius = 50;
             this.angle = 0;
             this.frameX = 0;
@@ -61,13 +71,11 @@ class Player {
             ctx.closePath();
       }
 }
-/* const enemyImage = new Image();
-enemyImage = 'enemy1.png';  */
 
 class Enemy {
       constructor() {
-            this.x = canvas.width + 200;
-            this.y = Math.random() * (canvas.height - 150) + 90;
+            this.x = $canvas.width + 200;
+            this.y = Math.random() * ($canvas.height - 150) + 90;
             this.radius = 60;
             this.speed = Math.random() * 2 + 2;
             this.frame = 0;
@@ -92,8 +100,8 @@ class Enemy {
       update() {
             this.x -= this.speed;
             if (this.x < 0 - this.radius * 2) {
-                  this.x = canvas.width + 200;
-                  this.y = Math.random() * (canvas.height - 150) + 90;
+                  this.x = $canvas.width + 200;
+                  this.y = Math.random() * ($canvas.height - 150) + 90;
                   this.speed = Math.random() * 2 + 2;
             }
             const dx = this.x - player.x;
@@ -106,16 +114,16 @@ class Enemy {
             }
       }
 }
-const player = new Player();
+
 
 //Bubbles
-const bubbles = [];
+
 
 
 class Bubble {
       constructor() {
-            this.x = Math.random() * canvas.width;
-            this.y = canvas.height + Math.random() * canvas.height;
+            this.x = Math.random() * $canvas.width;
+            this.y = $canvas.height + Math.random() * $canvas.height;
             this.radius = 50;
             this.speed = Math.random() * 5 + 1;
             this.distance = 0;
@@ -142,12 +150,38 @@ class Bubble {
       }
 }
 
+
+
+const player = new Player();
+const bubbles = [];
+const enemy = new Enemy();
+const background = new Image();
+background.src = 'images/background.png';
+const bg = {
+      x: 0,
+      y: 0,
+      width: $canvas.width,
+      height: 100,
+}
+
+
+function handleEnemies() {
+    enemy.draw();
+    enemy.update();
+}
+
+function GameOver() {
+    ctx.fillStyle = 'black';
+    ctx.fillText('GAME OVER, your score is ' + score, 60, 250);
+    gameOver = true;
+}
+
 function handbubbles() {
     //Llenamos el array de bubbles cada 50 frames
-      if (gameFrame % 50 == 0) {
+    if (gameFrame % 50 == 0) {
         bubbles.push(new Bubble());
-      }
-      //Actualizamos y dibujamos cada elemento del array de bubbles.
+    }
+    //Actualizamos y dibujamos cada elemento del array de bubbles.
     for (let i = 0; i < bubbles.length; i++) {
         bubbles[i].update();
         bubbles[i].draw();
@@ -157,41 +191,27 @@ function handbubbles() {
         if (bubbles[j].y < 0) {
             bubbles.splice(j, 1);
         }
-          //para verificar si hubo choque entre el jugador y las bubbles del array y si es así aumentar el score.
-          if (bubbles[j].distance < bubbles[j].radius + player.radius) {
-                // Mientras la condicion es falsa aumentamos el score para no contabilizar de más por cada burbuja que se tocó. Despues de contabilizarla se cambia el valor counters a true para indicar que ya fue contabilizada.
-                if (!bubbles[j].counters) {
-                      score++;
-                      bubbles[j].counters = true;
-                      bubbles.splice(j, 1);
-                      
-                }
-                
-          }
+        //para verificar si hubo choque entre el jugador y las bubbles del array y si es así aumentar el score.
+        if (bubbles[j].distance < bubbles[j].radius + player.radius) {
+            // Mientras la condicion es falsa aumentamos el score para no contabilizar de más por cada burbuja que se tocó. Despues de contabilizarla se cambia el valor counters a true para indicar que ya fue contabilizada.
+            if (!bubbles[j].counters) {
+                score++;
+                bubbles[j].counters = true;
+                bubbles.splice(j, 1);
+            }
+        }
     }
-    
 }
-const enemy = new Enemy();
-function handleEnemies() {
-      enemy.draw();
-      enemy.update();
-
-}
-
-function GameOver() {
-      ctx.fillStyle = 'black';
-      ctx.fillText('GAME OVER, your score is ' + score, 130, 250);
-      gameOver = true;
-}
-const background = new Image();
-background.src = 'images/background.png';
 
 function handbackground() {
-      ctx.drawImage(background,0,0,canvas.width,100);
+      bg.x--;
+      if (bg.x< - bg.width) bg.x = 0;
+      ctx.drawImage(background, bg.x, bg.y, bg.width, bg.height);
+      ctx.drawImage(background, bg.x + bg.width, bg.y, bg.width, bg.height);
 }
 //Animation Loop
 function animation() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.clearRect(0, 0, $canvas.width, $canvas.height);
       handbackground();
       handbubbles();
       player.update();
