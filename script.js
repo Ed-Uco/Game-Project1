@@ -43,15 +43,19 @@ class Player {
             this.health = 2;
       }
       draw() {
-             const dx = this.x - mouse.x;
-             const dy = this.y - mouse.y;
-             // formula para calcular el angulo a la que debe de estar ubicado el frente del jugador viendo hacia el puntero del raton.
-             let theta = Math.atan2(dy, dx);
-             this.angle = theta;
-             if (mouse.x != this.x) {
+            const playerLeft = new Image();
+            playerLeft.src = '/images/fish-normal.png';
+            const playerRight = new Image();
+            playerRight.src = '/images/fish down.png';
+            const dx = this.x - mouse.x;
+            const dy = this.y - mouse.y;
+            // formula para calcular el angulo a la que debe de estar ubicado el frente del jugador viendo hacia el puntero del raton.
+            let theta = Math.atan2(dy, dx);
+            this.angle = theta;
+            if (mouse.x != this.x) {
                  this.x -= dx / 10;
              }
-             if (mouse.y != this.y) {
+            if (mouse.y != this.y) {
                  this.y -= dy / 10;
              }
 
@@ -140,15 +144,14 @@ class Enemy {
             this.frame = 0;
             this.frameX = 0;
             this.frameY = 0;
+            this.spriteWidth = 418;
+            this.spriteHeight = 397;
 
       }    
       draw() {
-            ctx.fillStyle = 'yellow';
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.closePath();
-            
+            this.image = new Image();
+            this.image.src = '/images/blue.png';
+            ctx.drawImage(this.image, this.x - 50, this.y - 50, this.radius * 2, this.radius * 2);
             this.x -= this.speed;
             if (this.x < 0 - this.radius * 2) {
                   this.x = $canvas.width + 200;
@@ -192,10 +195,6 @@ class Bubble {
 
 
 const player = new Player();
-const playerLeft = new Image();
-playerLeft.src = '/images/fish-normal.png'
-const playerRight = new Image();
-playerRight.src = '/images/fish down.png'
 const bubbles = [];
 const enemy = new Enemy();
 const background = new Image();
@@ -312,9 +311,9 @@ function animation() {
       GameWin();
 }
 
-/* $button.addEventListener('click', event => {
+$button.addEventListener('click', event => {
       startGame();
-}); */
+}); 
 
-$button.onclick = startGame();
-/* startGame(); */
+/* $button.onclick = startGame();
+/* startGame(); */ 
