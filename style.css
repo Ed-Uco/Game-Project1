@@ -1,4 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap');
 * {
+      font-family: 'Luckiest Guy', cursive;
       margin: 0;
       padding: 0;
       box-sizing: border - box;
@@ -12,5 +14,6 @@ body {
 }
 #canvas1 {
      background: linear-gradient(to bottom, lightblue, darkblue, black);
+     font-family: 'Luckiest Guy', cursive;
 }
 

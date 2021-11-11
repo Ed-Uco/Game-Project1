@@ -4,7 +4,6 @@ const $button = document.querySelector('button');
 let score = 0;
 let intervalId;
 let gameFrame = 0;
-ctx.font = '50px Georgia';
 let gameOver = false;
 let gameWin = false;
 
@@ -129,7 +128,7 @@ class Live {
         }
       }
       Text() {
-            ctx.font = "30px sans-serif";
+            ctx.font = "30px Luckiest Guy"
             ctx.fillText("Lives :", 600, 50);
             ctx.fillStyle = "black";
       }
@@ -233,16 +232,16 @@ function touching() {
 
 function GameOver() {
       if (gameOver) {
-            ctx.fillStyle = 'blue';
-            ctx.fillText('GAME OVER, your score is ' + score, 350, 250);
+            ctx.fillStyle = 'white';
+            ctx.fillText('GAME OVER, your score is ' + score, 210, 250);
       }
 }
 
 function GameWin() {
       if (gameWin) {
             clearInterval(intervalId);
-            ctx.fillStyle = 'blue';
-            ctx.fillText('YOU WIN !!!!!, your score is ' + score, 350, 250);
+            ctx.fillStyle = 'white';
+            ctx.fillText('YOU WIN !!!!!, your score is ' + score, 220, 250);
       }
       
 } 
