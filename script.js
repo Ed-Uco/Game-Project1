@@ -1,20 +1,12 @@
-//$canvas setup
-//const $canvas = document.getElementById('$canvas1');
-//const $canvas = document.querySelector('canvas1');
-//const ctx = $canvas.getContext('2d');
-//const ctx = $canvas.getContext('2d');
-
-
-
 const $canvas = document.querySelector('canvas');
 const ctx = $canvas.getContext('2d');
-
-/* $canvas.width = 800;
-$canvas.height = 500; */
+const $button = document.querySelector('button');
 let score = 0;
+let intervalId;
 let gameFrame = 0;
 ctx.font = '50px Georgia';
-gameOver = false;
+let gameOver = false;
+let gameWin = false;
 
 
 //Mouse interactivity
@@ -39,7 +31,8 @@ $canvas.addEventListener('mouseup', function (event) {
 //Player
 class Player {
       constructor() {
-            this.x = $canvas.width;
+            /* this.x = $canvas.width; */
+            this.x = 0
             this.y = $canvas.height / 2;
             this.radius = 50;
             this.angle = 0;
@@ -47,53 +40,96 @@ class Player {
             this.frameY = 0;
             this.spriteWidth = 498;
             this.spriteHeight = 327;
-      }
-      update() {
-            const dx = this.x - mouse.x;
-            const dy = this.y - mouse.y;
-            let theta = Math.atan2(dy, dx);
-            this.angle = theta;
-            if (mouse.x != this.x) {
-                  this.x -= dx / 10;
-            }
-            if (mouse.y != this.y) {
-                  this.y -= dy / 10;
-            }
+            this.health = 2;
       }
       draw() {
-            if (mouse.click) {
-                  ctx.lineWidth = 0.2;
-                  ctx.beginPath();
-                  ctx.moveTo(this.x, this.y);
-                  ctx.lineTo(mouse.x, mouse.y);
-                  ctx.stroke();
-            }
-            //ctx.fillStyle = 'red';
-            ctx.beginPath();
-            //ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-            //ctx.fill();
-            ctx.closePath();
-            ctx.save();
-            ctx.translate(this.x, this.y);
-            ctx.rotate(this.angle);
-            if (this.x >= mouse.x) {
-                  ctx.drawImage(playerLeft,this.frameX * this.spriteWidth, this.frameY * this.spriteHeight, this.spriteWidth, this.spriteHeight, 0 -60, 0 -45, this.spriteWidth/4, this.spriteHeight/4)
-            } else {
-                  ctx.drawImage(
-                      playerRight,
-                      this.frameX * this.spriteWidth,
-                      this.frameY * this.spriteHeight,
-                      this.spriteWidth,
-                      this.spriteHeight,
-                      0 - 60,
-                      0 - 45,
-                      this.spriteWidth / 4,
-                      this.spriteHeight / 4,
-                  );
-            }
-            ctx.restore();
+             const dx = this.x - mouse.x;
+             const dy = this.y - mouse.y;
+             // formula para calcular el angulo a la que debe de estar ubicado el frente del jugador viendo hacia el puntero del raton.
+             let theta = Math.atan2(dy, dx);
+             this.angle = theta;
+             if (mouse.x != this.x) {
+                 this.x -= dx / 10;
+             }
+             if (mouse.y != this.y) {
+                 this.y -= dy / 10;
+             }
+
+           ctx.save();
+          // metodos para rotar e invertir la imagen del pez y poder darle vuelta si voltea a la derecha o a la izquierda. Es necesario invertir verticalmente la imagen original del pez. Se usan las dos imagenes, la normal(playerRight) y la invertida(playerLeft) verticalmente.
+            
+            
+          ctx.translate(this.x, this.y);
+          ctx.rotate(this.angle);
+          if (this.x >= mouse.x) {
+              ctx.drawImage(
+                  playerLeft,
+                  this.frameX * this.spriteWidth,
+                  this.frameY * this.spriteHeight,
+                  this.spriteWidth,
+                  this.spriteHeight,
+                  0 - 60,
+                  0 - 45,
+                  this.spriteWidth / 4,
+                  this.spriteHeight / 4,
+              );
+          } else {
+              ctx.drawImage(
+                  playerRight,
+                  this.frameX * this.spriteWidth,
+                  this.frameY * this.spriteHeight,
+                  this.spriteWidth,
+                  this.spriteHeight,
+                  0 - 60,
+                  0 - 45,
+                  this.spriteWidth / 4,
+                  this.spriteHeight / 4,
+              );
+          }
+          ctx.restore();
       }
+      touching(obj) {
+            const dx = obj.x - this.x;
+            const dy = obj.y - this.y;
+            let distance = Math.sqrt(dx * dx + dy * dy);
+            //Para detectar la colision entre los circulos
+            distance = Math.sqrt(dx * dx + dy * dy);
+            if (distance < this.radius + player.radius) {
+                  return true;
+            }
+      }
+      getHealt(){
+            return this.health;
+            }
+      liveLose(){
+                  this.health--;
+      }
+
 }
+
+class Live {
+      constructor() {
+            this.x = 700;
+            this.y = 25;
+            this.width = 30;
+            this.height = 30;
+            this.image = new Image();
+            this.image.src = "/images/red.png";
+      }
+      draw() {
+            if (player.health === 2) {
+                  ctx.drawImage(this.image,this.x,this.y,this.width,this.height) 
+            ctx.drawImage(this.image,this.x+35,this.y,this.width,this.height) 
+        } else if (player.health === 1){ 
+            ctx.drawImage(this.image,this.x,this.y,this.width,this.height) 
+        }
+      }
+      Text() {
+            ctx.font = "30px sans-serif";
+            ctx.fillText("Lives :", 600, 50);
+            ctx.fillStyle = "black";
+      }
+      }
 
 class Enemy {
       constructor() {
@@ -105,38 +141,31 @@ class Enemy {
             this.frameX = 0;
             this.frameY = 0;
 
-      }
+      }    
       draw() {
             ctx.fillStyle = 'yellow';
             ctx.beginPath();
             ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
             ctx.fill();
             ctx.closePath();
-            /* ctx.drawImage(enemyImage); */
-      }
-      update() {
+            
             this.x -= this.speed;
             if (this.x < 0 - this.radius * 2) {
                   this.x = $canvas.width + 200;
                   this.y = Math.random() * ($canvas.height - 150) + 90;
                   this.speed = Math.random() * 2 + 2;
             }
-            const dx = this.x - player.x;
-            const dy = this.y - player.y;
-            let distance = Math.sqrt(dx * dx + dy * dy);
-            //Para detectar la colision entre los circulos
-            distance = Math.sqrt(dx * dx + dy * dy);
-            if (distance < this.radius + player.radius) {
-                  GameOver();
-            }
+      }
+      speed1() {
+            this.speed = Math.random() * 2 + 10;
+      }
+      speed2() {
+            this.speed = Math.random() * 2 + 20;
       }
 }
 
 
 //Bubbles
-
-
-
 class Bubble {
       constructor() {
             this.x = Math.random() * $canvas.width;
@@ -154,13 +183,6 @@ class Bubble {
             this.distance = Math.sqrt(dx*dx + dy*dy);
       }
       draw() {
-            //Se dibujan los circulos objetivo.
-            /* ctx.fillStyle = "blue";
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.closePath();
-            ctx.stroke(); */
             this.image = new Image();
             this.image.src = '/images/bubble_pop.png';
             ctx.drawImage(this.image, this.x - 50, this.y - 50, this.radius * 2, this.radius * 2);
@@ -184,18 +206,48 @@ const bg = {
       width: $canvas.width,
       height: 100,
 }
+let lives = new Live();
+
+function startGame() {
+      if (intervalId) return;
+      intervalId = setInterval(() => {
+            animation();
+      }, 1000 / 60);
+}
 
 
-function handleEnemies() {
-    enemy.draw();
-    enemy.update();
+function touching() {
+      if (player.touching(enemy)) {
+          if (player.getHealt() > 0) {
+                player.liveLose();
+                player.x = 0;
+                player.y = 0;
+               
+          } else {
+                clearInterval(intervalId);
+                gameOver = true;
+                //GameOver();
+          }
+      }
+     
 }
 
 function GameOver() {
-    ctx.fillStyle = 'black';
-    ctx.fillText('GAME OVER, your score is ' + score, 60, 250);
-    gameOver = true;
+      if (gameOver) {
+            ctx.fillStyle = 'blue';
+            ctx.fillText('GAME OVER, your score is ' + score, 350, 250);
+      }
 }
+
+function GameWin() {
+      if (gameWin) {
+            clearInterval(intervalId);
+            ctx.fillStyle = 'blue';
+            ctx.fillText('YOU WIN !!!!!, your score is ' + score, 350, 250);
+      }
+      
+} 
+
 
 function handbubbles() {
     //Llenamos el array de bubbles cada 50 frames
@@ -224,6 +276,17 @@ function handbubbles() {
     }
 }
 
+function speedGame() {
+      if (score ===5) {
+            enemy.speed1()
+      } else if (score === 10) {
+            enemy.speed2()
+      } else if (score === 15) {
+            gameWin = true;
+      }
+      
+}
+// Funcion para el efecto del agua infinita
 function handbackground() {
       bg.x--;
       if (bg.x< - bg.width) bg.x = 0;
@@ -232,17 +295,26 @@ function handbackground() {
 }
 //Animation Loop
 function animation() {
+      //speedGame();
       ctx.clearRect(0, 0, $canvas.width, $canvas.height);
       handbackground();
       handbubbles();
-      player.update();
       player.draw();
-      handleEnemies();
+      lives.draw();
+      lives.Text();
+      enemy.draw();
       gameFrame++;
+      touching();
+      ctx.fillStyle = "black";
       ctx.fillText('Score: ' + score, 10, 50);
-      if (score === 2) {
-          ctx.fillText('Wow!! You are awesome!!', 80, 80);
-      }
-      if(!gameOver)requestAnimationFrame(animation);
+      speedGame();
+      GameOver();
+      GameWin();
 }
-animation();
+
+/* $button.addEventListener('click', event => {
+      startGame();
+}); */
+
+$button.onclick = startGame();
+/* startGame(); */
