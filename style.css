@@ -1,9 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap');
-* {
+ * {
       font-family: 'Luckiest Guy', cursive;
       margin: 0;
       padding: 0;
       box-sizing: border - box;
+      font-size: 18px;
+      background-color: white;
 }
 body {
       width: 100vw;
@@ -11,9 +13,68 @@ body {
       display: flex;
       justify-content: center;
       align-items: center;
+      /*background-image: url('/images/wallpaper.png');*/
+       background-image: url('/images//body-background.jpg');
+       background-size:cover;
+      /* background-size: cover; */
+      
 }
 #canvas1 {
      background: linear-gradient(to bottom, lightblue, darkblue, black);
-     font-family: 'Luckiest Guy', cursive;
+     /*font-family: 'Luckiest Guy', cursive;*/
 }
 
+#texto1{
+      color: white;
+       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      text-align: center;
+      font-size: 25px;
+      background-color: blue
+      ;
+}
+#texto2{
+     color: black;
+       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      text-align: left;
+      width: 80%;
+      height: 80%;
+      padding-top: 20px;
+      background-color: transparent;
+      border-style: 22p;
+      
+}
+
+#container-text{
+      width: 20%;
+      height: auto;
+      float: left;
+      margin-left: 10px;
+      margin-right: 50px;
+      background-color: whitesmoke;
+      border-color:black;
+      border-width: 5px; /* this allows you to adjust the thickness */
+      border-style: solid;
+      
+     
+      
+}
+#game1{
+      color: black;
+      font-weight: bold;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      text-align: left;
+      width: 120%;
+      background-color: transparent;
+      font-size: 22px;
+}
+#play{
+      text-align: right;
+      padding-top: 20px;
+      font-size: 22px;
+}
+.btn1{
+      font-size: 30px;
+      padding: 20px;
+      background-color:blue;
+      color: white;
+}
