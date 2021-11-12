@@ -159,10 +159,10 @@ class Enemy {
             }
       }
       speed1() {
-            this.speed = Math.random() * 2 + 10;
+            this.speed = Math.random() * 2 + 5;
       }
       speed2() {
-            this.speed = Math.random() * 2 + 20;
+            this.speed = Math.random() * 2 + 7;
       }
 }
 

@@ -28,7 +28,7 @@ body {
       color: white;
        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       text-align: center;
-      font-size: 25px;
+      font-size: 22px;
       background-color: blue
       ;
 }
@@ -52,7 +52,7 @@ body {
       margin-right: 50px;
       background-color: whitesmoke;
       border-color:black;
-      border-width: 5px; /* this allows you to adjust the thickness */
+      border-width: 5px; 
       border-style: solid;
       
      
@@ -65,7 +65,7 @@ body {
       text-align: left;
       width: 120%;
       background-color: transparent;
-      font-size: 22px;
+      font-size: 20px;
 }
 #play{
       text-align: right;
