@@ -313,6 +313,3 @@ function animation() {
 $button.addEventListener('click', event => {
       startGame();
 }); 
-
-/* $button.onclick = startGame();
-/* startGame(); */ 
